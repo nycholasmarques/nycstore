@@ -1,0 +1,157 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  name String
+  email String
+  password String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  roles     UserRole[]
+  cartItems CartItems[]
+  order Order[]
+  favorites Favorite[]
+  review Review[]
+
+  @@map("users")
+}
+
+model Role {
+  id Int @id @default(autoincrement())
+  name String @unique
+  users UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  user_id String
+  role_id Int
+  role   Role @relation(fields: [role_id], references: [id])
+  user   User @relation(fields: [user_id], references: [id])
+
+  @@id([user_id, role_id])
+}
+
+model Products {
+   id Int @id @default(autoincrement())
+   name String
+   description String
+   price Decimal
+   stock_quantity Int
+   discount_id Int 
+   highlights Boolean @default(false)
+   created_at DateTime? @default(now())
+   updated_at DateTime? @default(now())
+   category CategoryProduct[]
+   cart CartItems[]
+   order_items OrderItems[]
+   favorites Favorite[]
+   reviews Review[]
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String
+  category CategoryProduct[]
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  @@map("categories")
+}
+
+model CategoryProduct {
+  category_id Int
+  product_id Int
+  category Category @relation(fields: [category_id], references: [id])
+  product Products @relation(fields: [product_id], references: [id])
+
+  @@id([category_id, product_id])
+}
+
+model CartItems {
+  id Int @id @default(autoincrement())
+  user_id String
+  product_id Int
+  quantity Int
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  user   User @relation(fields: [user_id], references: [id])
+  product Products @relation(fields: [product_id], references: [id])
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+  user_id String
+  status String
+  total_price Decimal
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  orderItems OrderItems[]
+  user   User @relation(fields: [user_id], references: [id])
+
+  @@map("orders")
+}
+
+model OrderItems {
+  id Int @id @default(autoincrement())
+  order_id Int
+  product_id Int
+  quantity Int
+  price_at_time Decimal
+
+  order Order @relation(fields: [order_id], references: [id])
+  product Products @relation(fields: [product_id], references: [id])
+}
+
+model Discount {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  discount_type String
+  value Decimal
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  @@map("discounts")
+}
+
+model Favorite {
+  id Int @id @default(autoincrement())
+  user_id String
+  product_id Int
+  created_at DateTime? @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+  product Products @relation(fields: [product_id], references: [id])
+
+  @@map("favorites")
+}
+
+model Review {
+  id Int @id @default(autoincrement())
+  user_id String
+  product_id Int
+  comment String
+  rating Int
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+  product Products @relation(fields: [product_id], references: [id])
+
+  @@map("reviews")
+}
+
+
+
+
