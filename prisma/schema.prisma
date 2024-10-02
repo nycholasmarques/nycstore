@@ -46,8 +46,9 @@ model Products {
    name String
    description String
    price Decimal
+   image_url String
    stock_quantity Int
-   discount_id Int 
+   discount_id Int? 
    highlights Boolean @default(false)
    created_at DateTime? @default(now())
    updated_at DateTime? @default(now())
@@ -71,6 +72,8 @@ model Category {
 model CategoryProduct {
   category_id Int
   product_id Int
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
   category Category @relation(fields: [category_id], references: [id])
   product Products @relation(fields: [product_id], references: [id])
 
