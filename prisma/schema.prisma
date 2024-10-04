@@ -52,7 +52,7 @@ model Products {
    highlights Boolean @default(false)
    created_at DateTime? @default(now())
    updated_at DateTime? @default(now())
-   category CategoryProduct[]
+   categories CategoriesOnProducts[]
    cart CartItems[]
    order_items OrderItems[]
    favorites Favorite[]
@@ -62,19 +62,19 @@ model Products {
 model Category {
   id Int @id @default(autoincrement())
   name String
-  category CategoryProduct[]
+  products CategoriesOnProducts[]
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 
   @@map("categories")
 }
 
-model CategoryProduct {
+model CategoriesOnProducts {
   category_id Int
   product_id Int
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
-  category Category @relation(fields: [category_id], references: [id])
+  category Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
   product Products @relation(fields: [product_id], references: [id])
 
   @@id([category_id, product_id])

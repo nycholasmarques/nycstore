@@ -9,10 +9,11 @@ interface ProductRequest {
     price: number;
     image: string;
     stock_quantity: number;
+    categoriesArray: any;
 }
 
 class UpdateProductService {
-    async execute({ product_id, name, description, price, image, stock_quantity }: ProductRequest) {
+    async execute({ product_id, name, description, price, image, stock_quantity, categoriesArray }: ProductRequest) {
 
         const productExists = await prismaClient.products.findFirst({
             where: {
@@ -21,16 +22,18 @@ class UpdateProductService {
         })
 
         if (!productExists) {
-            throw new Error("Product not found");
+            throw new Error("Produto não encontrado");
         }
 
-        if (productExists.image_url) {
-            const filePath = path.join(__dirname, "..", "..", "..", "tmp", productExists.image_url);
-
-            try {
-                await fs.unlink(filePath);
-            } catch (err) {
-                throw new Error("Error deleting image");
+        if (image !== undefined) {
+            if (productExists.image_url) {
+                const filePath = path.join(__dirname, "..", "..", "..", "tmp", productExists.image_url);
+    
+                try {
+                    await fs.unlink(filePath);
+                } catch (err) {
+                    throw new Error("Erro ao deletar imagem");
+                }
             }
         }
 
@@ -43,9 +46,19 @@ class UpdateProductService {
                 description: description,
                 price: Number(price),
                 image_url: image,
-                stock_quantity: Number(stock_quantity)
+                stock_quantity: Number(stock_quantity),
+                categories: {
+                    deleteMany: {},
+                    create: categoriesArray.map(categoryId => ({
+                      category: {
+                        connect: { id: Number(categoryId) }
+                      }
+                    }))
+                }
             }
         })
+
+
         return product
     }
 }

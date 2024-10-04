@@ -14,7 +14,7 @@ class ListProductService {
         })
 
         if (!productExists) {
-            throw new Error("Product not found");
+            throw new Error("Produto não encontrado");
         }
 
         const product = prismaClient.products.findFirst({

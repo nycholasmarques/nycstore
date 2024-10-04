@@ -3,8 +3,10 @@ import { CreateProductService } from "../../services/product/CreateProductServic
 
 class CreateProductController {
     async handle(request: Request, response: Response) {
-        const { name, description, price, stock_quantity } = request.body;
+        const { name, description, price, stock_quantity, categories } = request.body;
 
+        const categoriesArray = categories.split(",");
+        
         const createProductService = new CreateProductService();
 
         if (!request.file) {
@@ -13,7 +15,7 @@ class CreateProductController {
             const { originalname, filename: image } = request.file;
 
             const product = await createProductService.execute({
-                 name, description, price, image, stock_quantity 
+                 name, description, price, image, stock_quantity, categoriesArray
             })
 
             return response.json(product);
