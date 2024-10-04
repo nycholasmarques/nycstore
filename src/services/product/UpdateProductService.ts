@@ -36,7 +36,7 @@ class UpdateProductService {
                 }
             }
         }
-
+        
         const product = await prismaClient.products.update({
             where: {
                 id: Number(product_id)
@@ -47,17 +47,17 @@ class UpdateProductService {
                 price: Number(price),
                 image_url: image,
                 stock_quantity: Number(stock_quantity),
-                categories: {
-                    deleteMany: {},
+                categories: categoriesArray && categoriesArray.length > 0
+                ? {
+                    deleteMany: {}, // Exclui todas as categorias existentes
                     create: categoriesArray.map(categoryId => ({
-                      category: {
-                        connect: { id: Number(categoryId) }
-                      }
+                        category: {
+                            connect: { id: Number(categoryId) }
+                        }
                     }))
-                }
+                } : undefined // Não altera categorias se não forem passadas
             }
         })
-
 
         return product
     }
