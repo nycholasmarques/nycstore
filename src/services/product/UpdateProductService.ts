@@ -10,10 +10,11 @@ interface ProductRequest {
     image: string;
     stock_quantity: number;
     categoriesArray: any;
+    discount_id: number
 }
 
 class UpdateProductService {
-    async execute({ product_id, name, description, price, image, stock_quantity, categoriesArray }: ProductRequest) {
+    async execute({ product_id, name, description, price, image, stock_quantity, categoriesArray, discount_id }: ProductRequest) {
 
         const productExists = await prismaClient.products.findFirst({
             where: {
@@ -49,13 +50,16 @@ class UpdateProductService {
                 stock_quantity: Number(stock_quantity),
                 categories: categoriesArray && categoriesArray.length > 0
                 ? {
-                    deleteMany: {}, // Exclui todas as categorias existentes
+                    deleteMany: {},
                     create: categoriesArray.map(categoryId => ({
                         category: {
                             connect: { id: Number(categoryId) }
                         }
                     }))
-                } : undefined // Não altera categorias se não forem passadas
+                } : undefined,
+                discount: {
+                    connect: { id: Number(discount_id) }
+                }
             }
         })
 

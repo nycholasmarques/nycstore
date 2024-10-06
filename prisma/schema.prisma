@@ -53,6 +53,7 @@ model Products {
    created_at DateTime? @default(now())
    updated_at DateTime? @default(now())
    categories CategoriesOnProducts[]
+   discount Discount? @relation(fields: [discount_id], references: [id])
    cart CartItems[]
    order_items OrderItems[]
    favorites Favorite[]
@@ -119,9 +120,10 @@ model OrderItems {
 model Discount {
   id Int @id @default(autoincrement())
   name String
-  description String
+  description String?
   discount_type String
-  value Decimal
+  value Float
+  products Products[]
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 

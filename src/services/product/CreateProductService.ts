@@ -6,11 +6,12 @@ interface ProductRequest {
     price: number;
     image: string;
     stock_quantity: number;
-    categoriesArray: []; 
+    categoriesArray: [];
+    discount_id: number;
 }
 
 class CreateProductService {
-    async execute({ name, description, price, image, stock_quantity, categoriesArray }: ProductRequest) {   
+    async execute({ name, description, price, image, stock_quantity, categoriesArray, discount_id }: ProductRequest) {   
         
         const product = await prismaClient.products.create({
             data: {
@@ -25,7 +26,11 @@ class CreateProductService {
                             connect: { id: Number(categoryId) }
                         }
                     }))
+                },
+                discount: {
+                    connect: { id: Number(discount_id) }
                 }
+
             }
         })
 
