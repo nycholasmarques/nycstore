@@ -6,6 +6,7 @@ import rolesRoutes from './roles.routes';
 import productsRoutes from './products.routes';
 import categoriesRoutes from './categories.routes';
 import discountsRoutes from './discounts.routes';
+import cartRoutes from './cart.routes';
 
 const router = Router();
 
@@ -14,6 +15,6 @@ router.use('/roles', rolesRoutes);
 router.use('/products', productsRoutes);
 router.use('/categories', categoriesRoutes);
 router.use('/discounts', discountsRoutes);
-
+router.use('/cart', cartRoutes);
 
 export { router }
