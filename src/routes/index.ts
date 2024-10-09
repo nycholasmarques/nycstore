@@ -8,6 +8,7 @@ import discountsRoutes from './discounts.routes';
 import cartRoutes from './cart.routes';
 import orderRoutes from './orders.routes';
 import favoritesRoutes from './favorites.routes';
+import commentsRoutes from './comments.routes';
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use('/discounts', discountsRoutes);
 router.use('/cart', cartRoutes);
 router.use('/orders', orderRoutes);
 router.use('/favorites', favoritesRoutes);
+router.use('/comments', commentsRoutes);
 
 export { router }

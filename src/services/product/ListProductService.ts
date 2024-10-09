@@ -20,6 +20,8 @@ class ListProductService {
         const product = prismaClient.products.findFirst({
             where: {
                 id: Number(product_id)
+            }, include: {
+                reviews: true
             }
         });
         return product;

@@ -11,7 +11,6 @@ class UpdateOrderService {
         const orderAlreadyExists = await prismaClient.order.findFirst({
             where: {
                 id: Number(order_id),
-                user_id: user_id
             }
         })
 
